@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SingIn.Classes
+namespace RegIn.Classes
 {
-    public class WorkingDB
+    public class Connection
     {
         public static readonly string config = "server=127.0.0.1;uid=root;pwd=;database=regin";
         public static MySqlConnection OpenConnection()
@@ -27,7 +27,7 @@ namespace SingIn.Classes
             }
         }
 
-        public static MySqlDataReader Query(string SQL,out MySqlConnection connection)
+        public static MySqlDataReader Query(string SQL, MySqlConnection connection)
         {
             connection = OpenConnection();
 
@@ -42,7 +42,7 @@ namespace SingIn.Classes
         }
         public static bool OpenConnection(MySqlConnection connection)
         {
-            return connection != null && connection.State  == System.Data.ConnectionState.Open;
+            return connection != null && connection.State == System.Data.ConnectionState.Open;
         }
     }
 }
