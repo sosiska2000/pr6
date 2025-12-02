@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SingIn", "SingIn\SingIn.csproj", "{563E242F-7307-4F2E-AEF1-CEEC7298010B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegIn", "SingIn\RegIn.csproj", "{563E242F-7307-4F2E-AEF1-CEEC7298010B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +18,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9B96B87E-8B94-49BE-A0CE-F83FFDB12519}
 	EndGlobalSection
 EndGlobal
