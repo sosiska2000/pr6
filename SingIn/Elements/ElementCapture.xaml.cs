@@ -14,7 +14,7 @@ namespace SingIn.Elements
         public CorrectCapture HandlerCorrectCapture;
         public delegate void CorrectCapture();
 
-        public string StrCapture;
+        private string StrCapture;
         public int WidhtCapture = 280, HeightCapture = 50;
 
         public ElementCapture()
@@ -75,12 +75,21 @@ namespace SingIn.Elements
                         ThisRandom.Next(-10, 10), 0, 0)
                 };
                 Capture.Children.Add(lNumber);
-                StrCapture
+                StrCapture += Number.ToString();
             }
+        }
+        public bool OnCapture()
+        {
+            return StrCapture == InputCapture.Text;
         }
         private void EnterCapture(object sender, KeyEventArgs e)
         {
-
+            if(InputCapture.Text.Length == 4)
+            {
+                if(!OnCapture()) CreateCapture();
+                else if(HandlerCorrectCapture != null) 
+                    HandlerCorrectCapture.Invoke();
+            }
         }
     }
 }
