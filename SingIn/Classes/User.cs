@@ -1,18 +1,21 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Microsoft.Win32;
+using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
+using System.Windows.Documents;
 
 
 namespace RegIn.Classes
 {
     public class User
     {
-        public int Id { get; set; } 
+        public int Id { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
         public string Name { get; set; }
-        public byte[] Image {  get; set; }
-        public DateTime DateUpdate {  get; set; }
-        public DateTime DateCreate {  get; set; }
+        public byte[] Image { get; set; }
+        public DateTime DateUpdate { get; set; }
+        public DateTime DateCreate { get; set; }
         public CorrectLogin HandlerCorrectLogin;
         public InCorrectLogin HandlerInCorrectLogin;
         public delegate void CorrectLogin();
@@ -37,7 +40,7 @@ namespace RegIn.Classes
                     this.Login = userData.GetString(1);
                     this.Password = userData.GetString(2);
                     this.Name = userData.GetString(3);
-                    if(userData.IsDBNull(4) == false)
+                    if (userData.IsDBNull(4) == false)
                     {
                         this.Image = new byte[64 * 1024];
                         userData.GetBytes(4, 0, Image, 0, Image.Length);
@@ -50,9 +53,90 @@ namespace RegIn.Classes
                 else HandlerCorrectLogin.Invoke();
             }
             else
-            {
                 HandlerCorrectLogin.Invoke();
+            Connection.CloseConnection(connection);
+        }
+        public void Save()
+        {
+            MySqlConnection connection = Connection.OpenConnection();
+            if (Connection.OpenConnection(connection))
+            {
+                MySqlCommand command = new MySqlCommand(
+                    "INSERT INTO " +
+                        " 'users'("+
+                            "'Login',"+
+                            "'Password'," + 
+                            "'Name'," +
+                            "'Image'," +
+                            "'DateUpdate'," +
+                            " 'DateCreate') " +
+                    "VALUE ("  +
+                    "@Login," +
+                    "@Password, "+
+                    "@Name, "+
+                    "@Image, "+
+                    "@DateUpdate,"+
+                    "@DateCreate)", connection);
+                command.Parameters.AddWithValue("Login", this.Login);
+                command.Parameters.AddWithValue("Password", this.Password);
+                command.Parameters.AddWithValue("Name", this.Name);
+                command.Parameters.AddWithValue("Image", this.Image);
+                command.Parameters.AddWithValue("DateUpdate", this.DateUpdate);
+                command.Parameters.AddWithValue("DateCreate", this.DateCreate);
+
+                command.ExecuteNonQuery();
             }
+            Connection.CloseConnection(connection);
+        }
+        public void CreateNewPassword()
+        {
+            if (this.Login != String.Empty)
+                this.Password = CreatePassword();
+
+            MySqlConnection connection = Connection.OpenConnection();
+            if (Connection.OpenConnection(connection))
+            {
+                Connection.Query(
+                    $"UPDATE+" +
+                        $"`users` " +
+                    $"FROM " +
+                        $"`Password`='{this.Password}' " +
+                    $"WHERE " +
+                        $"`Login`={this.Login}", connection);
+            }
+            Connection.CloseConnection(connection);
+            SendMail.SendMessage($"Your account  password has been changeed.\nNew password: {Password}", this.Login);
+        }
+
+        private string CreatePassword()
+        {
+            List<char> NewPassword = new List<char>();
+
+            Random random = new Random();
+            char[] ArrNumbers = { '1','2','3','4','5','6','7','8','9'};
+            char[] ArrSymbols = { '|','-','_','!','@','#','$','%','&','*','=','+'};
+            char[] ArrLowercase = { 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm' };
+
+            NewPassword.Add(ArrNumbers[random.Next(0, ArrNumbers.Length)]);
+            NewPassword.Add(ArrSymbols[random.Next(0, ArrSymbols.Length)]);
+
+            for (var i = 0; i < 2; i++)
+                NewPassword.Add(char.ToUpper(ArrLowercase[random.Next(0, ArrLowercase.Length)]));
+            for (var i = 0; i < 6; i++)
+                NewPassword.Add(ArrLowercase[random.Next(0, ArrLowercase.Length)]);
+
+            for (var i = 0;i < NewPassword.Count; i++)
+            {
+                int RandomSymbol = random.Next(0, NewPassword.Count);
+                char Symbol = NewPassword[RandomSymbol];
+                NewPassword[RandomSymbol] = NewPassword[i];
+                NewPassword[i] = Symbol;
+            }
+            string NPassword = "";
+            for (var i = 0; i < NewPassword.Count; i++)
+                NPassword += NPassword[i].ToString();
+
+                return NPassword;
         }
     }
 }
