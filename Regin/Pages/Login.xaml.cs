@@ -1,0 +1,54 @@
+﻿
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Xml.Serialization;
+
+namespace Regin.Pages
+{
+    /// <summary>
+    /// Логика взаимодействия для Login.xaml
+    /// </summary>
+    public partial class Login : Page
+    {
+        public Login(string message = "")
+        {
+            InitializeComponent();
+        }
+
+        private void SetPassword(object sender, KeyEventArgs e)
+        {
+            
+        }
+
+        private void OpenRegin(object sender, MouseButtonEventArgs e)
+        {
+            MainWindow.mainWindow.frame.Navigate(new Pages.Regin());
+        }
+
+        private void RecoveryPassword(object sender, MouseButtonEventArgs e)
+        {
+            MainWindow.mainWindow.frame.Navigate(new Pages.Recovery());
+        }
+
+        private void SetLogin(object sender, RoutedEventArgs e)
+        {
+            
+        }
+    }
+}
