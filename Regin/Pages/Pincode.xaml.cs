@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Regin.Classes;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Regin.Pages
 {
@@ -20,19 +22,31 @@ namespace Regin.Pages
     /// </summary>
     public partial class Pincode : Page
     {
+        private Common common = new Common();
         public Pincode()
         {
             InitializeComponent();
+            common.TbLogin = TbLogin;
+            common.LNameUser = mess;
+            common.IUser = IUser;
+            common.OpacityProperty = OpacityProperty;
         }
 
         private void Confirm(object sender, RoutedEventArgs e)
         {
-
+            int pin;
+            if (common.user is not null && TbCode.Text.Length == 4 && int.TryParse(TbCode.Text, out pin))
+            {
+                if(common.user.PinCode == pin)
+                {
+                    MainWindow.mainWindow.frame.Navigate(new Pages.Login("Successful authorization"));
+                }
+            }
         }
 
         private void SetLogin(object sender, RoutedEventArgs e)
         {
-
+            common.SetLogin();
         }
 
         private void Back(object sender, MouseButtonEventArgs e)
